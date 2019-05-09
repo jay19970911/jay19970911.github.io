@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>拖拽投放</title>
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			ul{
+				overflow: hidden;
+			}
+			li{
+				width: 80px;
+				height: 50px;
+				text-align: center;
+				line-height: 50px;
+				border: 1px solid #f00;
+				margin: 20px;
+				list-style: none;
+				float: left;
+			}
+			/*#txt{
+				width: ;
+			}*/
+			#out{
+				width: 100px;
+				height: 150px;
+				background: url(img/1.jpg) 0 0 no-repeat;
+				text-align: center;
+				margin: 100px;
+				background-size: 100%;
+				color: red;
+				border: 4px solid #000;
+			}
+		</style>
+	</head>
+	<body>
+		<ul>    
+			<li draggable="true">大气污染</li>   <!--  设为true表示允许拖拽-->
+			<li draggable="true">白色垃圾</li>
+			<li draggable="true">易拉罐</li>
+			<li draggable="true">香蕉皮</li>
+			<li draggable="true">废纸屑</li>
+		</ul>
+		<p id="txt"></p>
+		<div id="out">垃圾箱</div>
+	</body>
+	<script type="text/javascript">
+		window.onload=function(){
+			var aLi=document.getElementsByTagName('li');
+			var oDiv=document.getElementById("out");
+			var txt=document.getElementById("txt");
+			var targetLi=null;
+			var img=document.createElement('img')
+			img.src="img/1.jpg"
+			//拖拽
+			for(var i=0;i<aLi.length;i++){
+				aLi[i].ondragstart=function(ev){       //ondragstart事件在用户开始拖动元素或选择的文本时触发
+					this.style.background='yellow';
+					targetLi=this;
+					ev.dataTransfer.setData('Text',this.innerHTML);  //setData
+					ev.dataTransfer.setDragImage(img,20,20)
+					
+				}
+				aLi[i].ondragend=function(){                //事件对象实例在用户完成元素的拖动时执行
+					this.style.background=""
+				}
+			}
+			oDiv.ondragenter=function(){        //在拖动的元素进入到放置的目标时执行
+				this.style.borderColor='red'
+			}
+			oDiv.ondragover=function(ev){        //在元素正在拖动到放置目标时触发
+				ev.preventDefault()              //取消事件的默认动作，该方法将通知Web浏览器不要执行与事件关联的默认动作（如果存在这样的动作)
+			}
+			oDiv.ondragleave=function(){         //在可拖动的元素移出放置目标时触发
+				this.style.borderColor='#ff0'
+			}
+			oDiv.ondrop=function(ev){             //事件在可拖动元素或选取的文本放置在目标区域是触发
+				this.style.borderColor='#000';
+				var oText=ev.dataTransfer.getData('Text');
+				txt.innerHTML='删除的是: '+oText;
+				targetLi.parentNode.removeChild(targetLi);
+			}
+		}
+	</script>
+</html>
